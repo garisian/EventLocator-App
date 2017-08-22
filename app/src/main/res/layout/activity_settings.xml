@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="me.garisian.eventlocator.MainActivity">
+    tools:context="me.garisian.eventlocator.SettingsActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,8 +20,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main"
-        android:id="@+id/include2" />
+    <include layout="@layout/content_settings" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -31,13 +30,12 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
-    <Button
-        android:id="@+id/btnDoSomething"
+    <EditText
+        android:id="@+id/editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|left"
-        android:text="@string/btnDoSomething"
-        app:layout_anchor="@+id/include2"
-        app:layout_anchorGravity="center_vertical|right" />
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/settings_greeting" />
 
 </android.support.design.widget.CoordinatorLayout>
