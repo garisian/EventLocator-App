@@ -1,7 +1,14 @@
 <resources>
     <string name="app_name">EventLocator</string>
     <string name="action_settings">Settings</string>
+    <string name="options_settings">Options</string>
     <string name="btnDoSomething">Do Something Now!</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings Activity</string>
+    <string name="title_activity_results">Results Activity</string>
+    <string name="title_activity_options">Options Activity</string>
     <string name="settings_greeting">Welcome To The Settings!</string>
+    <string name="options_greeting">Choose What You Want To Find</string>
+    <string name="results_greeting">We Found The Following Events</string>
+
+    <string name="some_text">SOME OPTIONS --- STRINGS.XML</string>
 </resources>
