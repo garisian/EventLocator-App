@@ -37,15 +37,29 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "Application is running, yay!");
 
         Button btnDoSomething = (Button) (findViewById(R.id.btnDoSomething));
-        btnDoSomething.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "Button was clicked");
-                inputData = (EditText) findViewById(R.id.DataInput);
-                Toast toast = new Toast(getApplicationContext());
-                toast.setGravity(Gravity.TOP| Gravity.LEFT, 0, 0);
-                toast.makeText(MainActivity.this, inputData.getText(), toast.LENGTH_SHORT).show();
-            }
+        btnDoSomething.setOnClickListener(new View.OnClickListener()
+        {
+              public void onClick(View irrelevant)
+              {
+                  // Start NewActivity.class
+                  Intent myIntent = new Intent(MainActivity.this, ResultsActivity.class);
+                  inputData = (EditText) findViewById(R.id.DataInput);
+                  String inputAddressString = inputData.getText().toString();
+
+                  // Create a bundle to pass in data to results activity
+                  Bundle infoBundle = new Bundle();
+                  infoBundle.putString("inputAddress", inputAddressString);
+                  myIntent.putExtras(infoBundle);
+                  startActivity(myIntent);
+
+                  // Old code to show toast message of user input
+                  /*
+                      inputData = (EditText) findViewById(R.id.DataInput);
+                      Toast toast = new Toast(getApplicationContext());
+                      toast.setGravity(Gravity.TOP| Gravity.LEFT, 0, 0);
+                      toast.makeText(MainActivity.this, inputData.getText(), toast.LENGTH_SHORT).show();
+                  */
+              }
         });
     }
 
@@ -76,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
