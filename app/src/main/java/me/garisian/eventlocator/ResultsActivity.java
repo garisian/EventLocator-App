@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import me.garisian.utilities.WebsiteParsing;
+
 public class ResultsActivity extends AppCompatActivity {
 
     static String TAG = "ResultsActivity";
