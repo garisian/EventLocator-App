@@ -19,7 +19,8 @@ public class ResultsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getUserAddress();
+        // Print User input from main activity
+        // ------ getUserAddress();
     }
 
     public void getUserAddress()
