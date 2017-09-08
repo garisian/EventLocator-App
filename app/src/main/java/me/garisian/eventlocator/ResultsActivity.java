@@ -4,33 +4,38 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
+import me.garisian.utilities.GoogleLocation;
 import me.garisian.utilities.WebsiteParsing;
 
 public class ResultsActivity extends AppCompatActivity {
 
-    static String TAG = "ResultsActivity";
+    private String TAG = "ResultsActivity";
+
+    // Variables used for the POST call wia google locations api
     private String userAddress;
-    static String locationLatitude = "51.503186";
-    static String locationLongtitude = "-0.126446";
-    static String type = "restaurant";
-    static int radius = 500;
+    private String locationLatitude = "51.503186";
+    private String locationLongtitude = "-0.126446";
+    private String type = "restaurant";
+    private int radius = 500;
 
+    private String dataString = "";
 
-    public void getUserAddress()
-    {
-        Bundle bundle = getIntent().getExtras();
-        String text= bundle.getString("inputAddress");
-        Log.i(TAG, text);
-        userAddress = text;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,43 +44,133 @@ public class ResultsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Extract data from a fixed address
-        getRequestData();
 
         // Print User input from main activity
         // ------ getUserAddress();
+        // start the AsyncTask Call since post call needs to be in unique thread
+        new GetPlaces().execute();
+
     }
 
-    public void getRequestData()
+    private class GetPlaces extends AsyncTask
     {
-        String requestURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"+
-                                    "location="+locationLatitude+","+locationLongtitude+
-                                    "&type="+type+
-                                    "&radius="+radius+
-                                    "&key=AIzaSyBfxw5cINgN7q89t-HGIsnsb6lRUDU8rjQ";
-
-        WebsiteParsing s = new WebsiteParsing(requestURL);
-        s.loadWebsiteContents();
-
-        // Read content
-        try
+        @Override
+        protected void onPreExecute()
         {
-            BufferedReader test = s.getReader();
+            // nothing for now
+        }
 
-            String line;
-            while((line=test.readLine())!= null)
+        @Override
+        protected Object doInBackground(Object[] params)
+        {
+            getRequestData();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object result)
+        {
+            // Data should be extracted at this point. Display the data on the activity panel
+            
+            return;
+        }
+
+        public void getRequestData()
+        {
+            String requestURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"+
+                    "location="+locationLatitude+","+locationLongtitude+
+                    "&type="+type+
+                    "&radius="+radius+
+                    "&key=AIzaSyBfxw5cINgN7q89t-HGIsnsb6lRUDU8rjQ";
+
+            WebsiteParsing s = new WebsiteParsing(requestURL);
+            s.loadWebsiteContents();
+
+            // Read content
+            try
             {
-                System.out.println(line);
+                BufferedReader dataPipe = s.getReader();
+                ArrayList googlePlaceList = new ArrayList();
+                //printData(dataPipe);
+
+                // Convert bufferedreader to a JSON Object for easy Object Extraction
+                dataString = convertToString(dataPipe);
+                JSONObject jsonObj = new JSONObject(dataString);
+                //Log.i("THIS BETTER WORK", jsonObj.get("results").toString());
+                JSONArray jsonArray = jsonObj.getJSONArray("results");
+                for (int i = 0; i < jsonArray.length(); i++)
+                {
+                    GoogleLocation place = new GoogleLocation();
+                    if(jsonArray.getJSONObject(i).has("name"))
+                    {
+                        place.setName(jsonArray.getJSONObject(i).optString("name"));
+                        place.setRating(jsonArray.getJSONObject(i).optString("rating", " "));
+
+                        if (jsonArray.getJSONObject(i).has("opening_hours"))
+                        {
+                            if (jsonArray.getJSONObject(i).getJSONObject("opening_hours").has("open_now"))
+                            {
+                                if (jsonArray.getJSONObject(i).getJSONObject("opening_hours").getString("open_now").equals("true"))
+                                {
+                                    place.setOpenNow("YES");
+                                } else {
+                                    place.setOpenNow("NO");
+                                }
+                            }
+                        }
+                        else {
+                            place.setOpenNow("Not Known");
+                        }
+                    }
+                    googlePlaceList.add(place);
+                }
             }
-            test.close();
-        }
-        catch(Exception e)
-        {
-            System.out.println("YOU hsouldn't have come here");
+            catch(IOException e)
+            {
+                System.out.println("Something terribly went wrong. Results Activity: IOException caught");
+                System.out.println(e);
+            }
+            catch(JSONException e)
+            {
+                System.out.println("Something terribly went wrong. Results Activity: JSONException caught");
+            }
+            catch(Exception e)
+            {
+                System.out.println("Something terribly went wrong. Results Activity: Exception caught");
+                System.out.println(e);
+            }
         }
 
+        public String convertToString(BufferedReader dataPipe) throws IOException
+        {
+            String line;
+            String combined = "";
+            while((line=dataPipe.readLine())!= null)
+            {
+                combined += line;
+            }
+            dataPipe.close();
+            return combined;
+        }
+
+        public void printData(BufferedReader dataPipe) throws IOException
+        {
+            String line;
+            while((line=dataPipe.readLine())!= null)
+            {
+                Log.i(TAG, line);
+            }
+            dataPipe.close();
+        }
     }
 
+    public void getUserAddress()
+    {
+        Bundle bundle = getIntent().getExtras();
+        String text= bundle.getString("inputAddress");
+        Log.i(TAG, text);
+        userAddress = text;
+    }
 }
 
 

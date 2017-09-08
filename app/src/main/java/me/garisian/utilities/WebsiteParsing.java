@@ -1,5 +1,7 @@
 package me.garisian.utilities;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -33,9 +35,8 @@ public class WebsiteParsing
         {
             reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
         }
-        catch(IOException error) { System.err.println(error); }
-        catch(Exception error) { System.err.println(error); }
-
+        catch(IOException error) { Log.i("WebsiteParsing", error.toString()); }
+        catch(Exception error) { Log.i("WebsiteParsing", error.toString()); }
     }
 
     public BufferedReader getReader() {
