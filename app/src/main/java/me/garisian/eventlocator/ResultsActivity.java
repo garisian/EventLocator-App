@@ -37,8 +37,8 @@ public class ResultsActivity extends AppCompatActivity {
 
     // Variables used for the POST call wia google locations api
     private String userAddress;
-    private String locationLatitude = "51.503186";
-    private String locationLongtitude = "-0.126446";
+    private String locationLatitude;
+    private String locationLongtitude;
     private String type = "restaurant";
     private int radius = 500;
 
@@ -57,7 +57,7 @@ public class ResultsActivity extends AppCompatActivity {
 
 
         // Print User input from main activity
-        // ------ getUserAddress();
+        getUserAddress();
         // start the AsyncTask Call since post call needs to be in unique thread
         new GetPlaces().execute();
 
@@ -78,6 +78,7 @@ public class ResultsActivity extends AppCompatActivity {
         @Override
         protected Object doInBackground(Object[] params)
         {
+            getCoordinates();
             getRequestData();
             return null;
         }
@@ -104,6 +105,44 @@ public class ResultsActivity extends AppCompatActivity {
             }
             displayResults();
             return;
+        }
+
+        public void getCoordinates()
+        {
+            String scriptAddress = userAddress.replaceAll(" ", "+").toLowerCase();
+
+            String requestURL = "https://maps.googleapis.com/maps/api/geocode/json?"+
+                    "address="+scriptAddress+
+                    "&key=AIzaSyBfxw5cINgN7q89t-HGIsnsb6lRUDU8rjQ";
+            WebsiteParsing s = new WebsiteParsing(requestURL);
+            s.loadWebsiteContents();
+
+            try {
+                BufferedReader dataPipe = s.getReader();
+                //printData(dataPipe);
+
+                // Convert bufferedreader to a JSON Object for easy Object Extraction
+                String line;
+                String combined = "";
+                while((line=dataPipe.readLine())!= null)
+                {
+                    combined += line;
+                }
+                dataPipe.close();
+
+                JSONObject jsonObj = new JSONObject(combined);
+                JSONObject json = jsonObj.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
+                locationLatitude = json.get("lat").toString();
+                locationLongtitude = json.get("lng").toString();
+
+                //Log.i("HELLOOOOOOOOOOOOOOOOOOO",json.get("lat").toString());
+                //Log.i("HELLOOOOOOOOOOOOOOOOOOO",json.get("lng").toString());
+            }
+            catch(IOException e)
+            {}
+            catch(Exception e)
+            {}
+
         }
 
         public void getRequestData()
