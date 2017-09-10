@@ -1,13 +1,20 @@
 package me.garisian.eventlocator;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.JsonReader;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,6 +40,9 @@ public class ResultsActivity extends AppCompatActivity {
     private String locationLongtitude = "-0.126446";
     private String type = "restaurant";
     private int radius = 500;
+
+    ArrayList<GoogleLocation> googlePlaceList = new ArrayList<GoogleLocation>();
+    MyCustomResultsAdapter dataAdapter = null;
 
     private String dataString = "";
 
@@ -71,7 +81,20 @@ public class ResultsActivity extends AppCompatActivity {
         protected void onPostExecute(Object result)
         {
             // Data should be extracted at this point. Display the data on the activity panel
-            
+            /*
+            for(GoogleLocation item: googlePlaceList)
+            {
+                System.out.println(item.currentlyOpenNow());
+                System.out.println(item.getName());
+                System.out.println(item.getRating());
+                System.out.println("------------------------------");
+            }
+            */
+
+            // create an ArrayAdaptar from the String Array. Recycles old views instead of creating 1
+            // for each view and saving
+
+            displayResults();
             return;
         }
 
@@ -90,7 +113,6 @@ public class ResultsActivity extends AppCompatActivity {
             try
             {
                 BufferedReader dataPipe = s.getReader();
-                ArrayList googlePlaceList = new ArrayList();
                 //printData(dataPipe);
 
                 // Convert bufferedreader to a JSON Object for easy Object Extraction
@@ -113,7 +135,8 @@ public class ResultsActivity extends AppCompatActivity {
                                 if (jsonArray.getJSONObject(i).getJSONObject("opening_hours").getString("open_now").equals("true"))
                                 {
                                     place.setOpenNow("YES");
-                                } else {
+                                }
+                                else {
                                     place.setOpenNow("NO");
                                 }
                             }
@@ -162,6 +185,74 @@ public class ResultsActivity extends AppCompatActivity {
             }
             dataPipe.close();
         }
+    }
+
+    private class MyCustomResultsAdapter extends ArrayAdapter<GoogleLocation>
+    {
+
+        private ArrayList<GoogleLocation> resultsList;
+
+        public MyCustomResultsAdapter(Context context, int textViewResourceId, ArrayList<GoogleLocation> settingList)
+        {
+            super(context, textViewResourceId, settingList);
+            this.resultsList = new ArrayList<GoogleLocation>();
+            this.resultsList.addAll(settingList);
+        }
+
+        private class ViewHolder {
+            TextView code;
+            CheckBox name;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ViewHolder holder = null;
+            Log.v("ConvertView", String.valueOf(position));
+
+            if (convertView == null) {
+                LayoutInflater vi = (LayoutInflater)getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE);
+                convertView = vi.inflate(R.layout.settings_info , null);
+                //R.layout.country_info
+                //R.xml.settings_info
+                holder = new ViewHolder();
+                holder.code = (TextView) convertView.findViewById(R.id.code);
+                holder.name = (CheckBox) convertView.findViewById(R.id.checkBox1);
+                convertView.setTag(holder);
+
+                holder.name.setOnClickListener( new View.OnClickListener() {
+                    public void onClick(View v) {
+                        CheckBox cb = (CheckBox) v ;
+                        GoogleLocation country = (GoogleLocation) cb.getTag();
+                        Toast.makeText(getApplicationContext(),
+                                "Clicked on Checkbox: " + cb.getText() +
+                                        " is " + cb.isChecked(),
+                                Toast.LENGTH_LONG).show();
+                        // country.setTrigger(cb.isChecked());
+                    }
+                });
+            }
+            else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            GoogleLocation location = resultsList.get(position);
+            holder.name.setText(location.getName());
+            //holder.name.setChecked(country.isUsed());
+            holder.name.setTag(location);
+
+            return convertView;
+        }
+    }
+
+    public void displayResults()
+    {
+        dataAdapter = new MyCustomResultsAdapter(this, R.layout.settings_info, googlePlaceList);
+        ListView listView = (ListView) findViewById(R.id.listOfResults);
+
+        // Assign adapter to ListView
+        listView.setAdapter(dataAdapter);
     }
 
     public void getUserAddress()
