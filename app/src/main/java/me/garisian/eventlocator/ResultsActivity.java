@@ -1,5 +1,6 @@
 package me.garisian.eventlocator;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -64,10 +65,14 @@ public class ResultsActivity extends AppCompatActivity {
 
     private class GetPlaces extends AsyncTask
     {
+        private ProgressDialog dialog = new ProgressDialog(ResultsActivity.this);
+
         @Override
         protected void onPreExecute()
         {
             // nothing for now
+            this.dialog.setMessage("Please wait");
+            this.dialog.show();
         }
 
         @Override
@@ -93,7 +98,10 @@ public class ResultsActivity extends AppCompatActivity {
 
             // create an ArrayAdaptar from the String Array. Recycles old views instead of creating 1
             // for each view and saving
-
+            if (dialog.isShowing())
+            {
+                dialog.dismiss();
+            }
             displayResults();
             return;
         }
