@@ -37,6 +37,7 @@ public class ResultsActivity extends AppCompatActivity {
 
     // Variables used for the POST call wia google locations api
     private String userAddress;
+    private String userOptions;
     private String locationLatitude;
     private String locationLongtitude;
     private String type = "restaurant";
@@ -57,7 +58,7 @@ public class ResultsActivity extends AppCompatActivity {
 
 
         // Print User input from main activity
-        getUserAddress();
+        getUserInput();
         // start the AsyncTask Call since post call needs to be in unique thread
         new GetPlaces().execute();
 
@@ -149,7 +150,7 @@ public class ResultsActivity extends AppCompatActivity {
         {
             String requestURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"+
                     "location="+locationLatitude+","+locationLongtitude+
-                    "&type="+type+
+                    "&type="+userOptions+
                     "&radius="+radius+
                     "&key=AIzaSyBfxw5cINgN7q89t-HGIsnsb6lRUDU8rjQ";
 
@@ -302,12 +303,13 @@ public class ResultsActivity extends AppCompatActivity {
         listView.setAdapter(dataAdapter);
     }
 
-    public void getUserAddress()
+    public void getUserInput()
     {
         Bundle bundle = getIntent().getExtras();
         String text= bundle.getString("inputAddress");
-        Log.i(TAG, text);
+        String options= bundle.getString("options");
         userAddress = text;
+        userOptions = options;
     }
 }
 

@@ -42,7 +42,12 @@ public class MainActivity extends AppCompatActivity {
               public void onClick(View irrelevant)
               {
                   // Start NewActivity.class
-                  Intent myIntent = new Intent(MainActivity.this, ResultsActivity.class);
+                    /*
+                    Intent myIntent = new Intent(MainActivity.this, ResultsActivity.class);
+                  inputData = (EditText) findViewById(R.id.DataInput);
+                  String inputAddressString = inputData.getText().toString();
+                  */
+                  Intent myIntent = new Intent(MainActivity.this, OptionsActivity.class);
                   inputData = (EditText) findViewById(R.id.DataInput);
                   String inputAddressString = inputData.getText().toString();
 
@@ -84,12 +89,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
-        if(id == R.id.options_settings)
-        {
-            Intent intent = new Intent(this, OptionsActivity.class);
-            startActivity(intent);
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 }
