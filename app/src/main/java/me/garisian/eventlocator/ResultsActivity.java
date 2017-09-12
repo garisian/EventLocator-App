@@ -40,7 +40,6 @@ public class ResultsActivity extends AppCompatActivity {
     private String userOptions;
     private String locationLatitude;
     private String locationLongtitude;
-    private String type = "restaurant";
     private int radius = 500;
 
     ArrayList<GoogleLocation> googlePlaceList = new ArrayList<GoogleLocation>();
@@ -152,6 +151,7 @@ public class ResultsActivity extends AppCompatActivity {
                     "location="+locationLatitude+","+locationLongtitude+
                     "&type="+userOptions+
                     "&radius="+radius+
+                    "&rankBy=distance"+
                     "&key=AIzaSyBfxw5cINgN7q89t-HGIsnsb6lRUDU8rjQ";
 
             WebsiteParsing s = new WebsiteParsing(requestURL);
@@ -182,17 +182,21 @@ public class ResultsActivity extends AppCompatActivity {
                             {
                                 if (jsonArray.getJSONObject(i).getJSONObject("opening_hours").getString("open_now").equals("true"))
                                 {
-                                    place.setOpenNow("YES");
+                                    place.setOpenNow(true);
                                 }
                                 else {
-                                    place.setOpenNow("NO");
+                                    place.setOpenNow(false);
                                 }
                             }
                         }
                         else {
-                            place.setOpenNow("Not Known");
+                            place.setOpenNow(false);
                         }
                     }
+                    JSONObject json = jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
+                    float currentLatitude = Float.parseFloat(json.get("lat").toString());
+                    float currentLongitude = Float.parseFloat(json.get("lng").toString())    ;
+                    place.setDistanceFromCoordinates(Float.parseFloat(locationLatitude),Float.parseFloat(locationLongtitude),currentLatitude,currentLongitude);
                     googlePlaceList.add(place);
                 }
             }
@@ -286,9 +290,10 @@ public class ResultsActivity extends AppCompatActivity {
             }
 
             GoogleLocation location = resultsList.get(position);
-            holder.name.setText(location.getName());
+            String isOpen = location.currentlyOpenNow()? "OPEN": "CLOSED";
+            holder.name.setText(location.getName()+" -Currently "+isOpen + " -Distance "+location.getDistance());
             //holder.name.setChecked(country.isUsed());
-            holder.name.setTag(location);
+            //holder.name.setTag(location);
 
             return convertView;
         }
@@ -311,6 +316,7 @@ public class ResultsActivity extends AppCompatActivity {
         userAddress = text;
         userOptions = options;
     }
+
 }
 
 

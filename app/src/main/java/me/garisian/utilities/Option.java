@@ -1,5 +1,7 @@
 package me.garisian.utilities;
 
+import android.util.Log;
+
 /**
  * Created by garis on 2017-09-10.
  */
@@ -9,10 +11,12 @@ public class Option
     private String name;
     private boolean used;
 
-    public Option(String name)
+    public Option(String name) throws Exception
     {
         this.name = name;
         used = false;
+        Log.i("LALALALALALLALALALAA", System.getProperty("user.dir"));
+
     }
 
     // Getter and Setters for Setting Variablesf

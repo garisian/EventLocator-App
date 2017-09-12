@@ -2,6 +2,7 @@ package me.garisian.eventlocator;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +18,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import me.garisian.utilities.Option;
 
@@ -25,6 +35,7 @@ public class OptionsActivity extends AppCompatActivity {
 
     MyCustomOptionsAdapter dataAdapter = null;
     String optionList = "";
+    Map<String,String> optionsMapping =  new HashMap<String,String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,37 +53,7 @@ public class OptionsActivity extends AppCompatActivity {
     {
         //Array list of Option
         ArrayList<Option> optionList = new ArrayList<Option>();
-        optionList.add(new Option("airport"));
-        optionList.add(new Option("aquarium"));
-        optionList.add(new Option("bank"));
-        optionList.add(new Option("bus_station"));
-        optionList.add(new Option("clothing_store"));
-        optionList.add(new Option("convenience_store"));
-        optionList.add(new Option("electronics_store"));
-        optionList.add(new Option("fire_station"));
-        optionList.add(new Option("gas_station"));
-        optionList.add(new Option("gym"));
-        optionList.add(new Option("hair_care"));
-        optionList.add(new Option("hardware_store"));
-        optionList.add(new Option("hindu_temple"));
-        optionList.add(new Option("hospital"));
-        optionList.add(new Option("jewelry_store"));
-        optionList.add(new Option("lawyer"));
-        optionList.add(new Option("library"));
-        optionList.add(new Option("liquor_store"));
-        optionList.add(new Option("movie_rental"));
-        optionList.add(new Option("movie_theater"));
-        optionList.add(new Option("museum"));
-        optionList.add(new Option("night_club"));
-        optionList.add(new Option("parking"));
-        optionList.add(new Option("police"));
-        optionList.add(new Option("post_office"));
-        optionList.add(new Option("restaurant"));
-        optionList.add(new Option("school"));
-        optionList.add(new Option("subway_station"));
-        optionList.add(new Option("university"));
-        optionList.add(new Option("university"));
-        optionList.add(new Option("zoo"));
+        populateOptions(optionList);
 
         // create an ArrayAdaptar from the String Array. Recycles old views instead of creating 1
         // for each view and saving
@@ -97,6 +78,34 @@ public class OptionsActivity extends AppCompatActivity {
         });
     }
 
+    private void populateOptions(ArrayList<Option> optionList)
+    {
+        try
+        {
+            AssetManager am = getAssets();
+            InputStream is = am.open("OptionsList.txt");
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] elements = line.split("=");
+                optionList.add(new Option(elements[0]));
+                optionsMapping.put(elements[0], elements[1]);
+            }
+        }
+        catch(FileNotFoundException e)
+        {
+            Log.v("OPTIONSACTIVITY ", "FILENOTFOUND ERROR");
+            Log.v("OPTIONSACTIVITY", System.getProperty("user.dir"));
+        }
+        catch(IOException e)
+        {
+            Log.v("OPTIONSACTIVITY", "IOEXCEPTION ERROR");
+            Log.v("OPTIONSACTIVITY", e.toString());
+        }
+        catch(Exception e)
+        {}
+    }
+
     // Show a Toast popup message whenever a button is clicked
     private void checkButtonClick() {
         Button myButton = (Button) findViewById(R.id.findSelected);
@@ -105,25 +114,26 @@ public class OptionsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 optionList = "";
-                StringBuffer responseText = new StringBuffer();
-                responseText.append("The following were selected...\n");
+                //StringBuffer responseText = new StringBuffer();
+                //responseText.append("The following were selected...\n");
                 ArrayList<Option> countryList = dataAdapter.settingList;
                 for(int i=0;i<countryList.size();i++){
                     Option setting = countryList.get(i);
                     if(setting.isUsed()){
-                        responseText.append("\n" + setting.getName());
+                        //responseText.append("\n" + setting.getName());
                         if(optionList.equals(""))
                         {
-                            optionList+=setting.getName();
+                            optionList+=optionsMapping.get(setting.getName()).trim();
+                            Log.v("OPTIONSACTIVITY", optionList);
                         }
                         else
                         {
-                            optionList+="|"+setting.getName();
+                            optionList+="|"+optionsMapping.get(setting.getName()).trim();
+                            Log.v("OPTIONSACTIVITY", optionList);
                         }
                     }
                 }
-                Toast.makeText(getApplicationContext(),
-                        responseText, Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(), responseText, Toast.LENGTH_LONG).show();
 
 
                 // Send userAddress from previous activity and selected options for result extraction
@@ -133,9 +143,16 @@ public class OptionsActivity extends AppCompatActivity {
                 infoBundle.putString("inputAddress", inputAddressString);
                 infoBundle.putString("options", optionList);
 
-                Intent myIntent = new Intent(OptionsActivity.this, ResultsActivity.class);
-                myIntent.putExtras(infoBundle);
-                startActivity(myIntent);
+                if(optionList == "")
+                {
+                    Toast.makeText(getApplicationContext(), "Select at least one option.", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Intent myIntent = new Intent(OptionsActivity.this, ResultsActivity.class);
+                    myIntent.putExtras(infoBundle);
+                    startActivity(myIntent);
+                }
             }
         });
     }

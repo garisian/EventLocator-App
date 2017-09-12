@@ -24,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/checkBox1"
         android:layout_alignBottom="@+id/checkBox1"
-        android:layout_toRightOf="@+id/checkBox1"
-        android:text="TextView" />
+        android:layout_toRightOf="@+id/checkBox1" />
 
 </RelativeLayout>
