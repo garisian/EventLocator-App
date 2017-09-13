@@ -115,10 +115,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarke
     public void onMapReady(GoogleMap googleMap) {
         // Add a marker in Sydney, Australia,
         // and move the map's camera to the same location.
-        LatLng toronto = new LatLng(43.6730796,-79.46743909999999);
-        googleMap.addMarker(new MarkerOptions().position(toronto)
+        LatLng sydney = new LatLng(43.6730796,-79.46743909999999);
+        googleMap.addMarker(new MarkerOptions().position(sydney)
                 .title("Marker in Toronto"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(toronto));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         googleMap.animateCamera( CameraUpdateFactory.zoomTo( 17.0f ) );
         googleMap.setOnMarkerClickListener(this);
 
