@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarke
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         googleMap.animateCamera( CameraUpdateFactory.zoomTo( 17.0f ) );
         googleMap.setOnMarkerClickListener(this);
-        
+
     }
 
 
