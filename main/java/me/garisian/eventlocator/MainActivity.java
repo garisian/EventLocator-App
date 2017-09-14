@@ -9,6 +9,8 @@ package me.garisian.eventlocator;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -41,12 +43,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import me.garisian.utilities.MapsActivity;
+import me.garisian.utilities.GPSTracker;
 
 public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
 
     static String TAG = "MainActivity";
     private EditText inputData;
+    GoogleMap googleMap;
+    Button btnGetLoc;
 
     // To get data for current Location
     private LocationManager locationManager;
@@ -58,6 +67,48 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarke
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        // Map button for getting user's location
+        btnGetLoc = (Button) findViewById(R.id.btnGetLoc);
+
+        // Request permission from user
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},123);
+
+        btnGetLoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get Location Using GPS
+                // Object for GPSTracker
+                GPSTracker g = new GPSTracker(getApplicationContext());
+                Location l = g.getLocation();
+                if(l != null)
+                {
+                    double lat = l.getLatitude();
+                    double lng = l.getLongitude();
+                    Toast.makeText(getApplicationContext(), "LAT: "+lat+"\n LNG:" +lng,Toast.LENGTH_LONG).show();
+                    putMarker(lat,lng,googleMap);
+                    Geocoder geocoder;
+                    List<Address> addresses;
+                    geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                    try
+                    {
+                        addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                        String city = addresses.get(0).getLocality();
+                        String state = addresses.get(0).getAdminArea();
+                        String country = addresses.get(0).getCountryName();
+                        String postalCode = addresses.get(0).getPostalCode();
+                        String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+                        String fullAddress = address+", "+city+", "+state+", "+country;
+                        EditText myTextBox = (EditText) findViewById(R.id.DataInput);
+                        myTextBox.setText(fullAddress);
+                    }
+                    catch(IOException e){}
+
+                }
+            }
+        });
 
         Log.i(TAG, "Application is running, yay!");
         Button btnDoSomething = (Button) (findViewById(R.id.btnDoSomething));
@@ -122,53 +173,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarke
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
         // Add a marker in Sydney, Australia,
         // and move the map's camera to the same location.
 
-
-       getCurrentLocation(googleMap);
-
-    }
-
-    public void getCurrentLocation(final GoogleMap googleMap) {
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                putMarker(location.getLatitude(), location.getLongitude(), googleMap);
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-            @Override
-            public void onProviderEnabled(String provider) {}
-
-            @Override
-            public void onProviderDisabled(String provider) {}
-        };
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Request for permissions
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET
-                }, 10);
-            }
-            return;
-        } else {
-            updateLocation();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 10:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    updateLocation();
-                return;
-        }
+       //getCurrentLocation(googleMap);
+        //putMarker(43.6730796,-79.46743909999999,googleMap);
     }
 
     public void putMarker(double longitude, double latitude, GoogleMap googleMap) {
@@ -178,11 +188,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarke
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(toronto));
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
         googleMap.setOnMarkerClickListener(this);
-    }
-
-    public void updateLocation() {
-
-        locationManager.requestLocationUpdates("gps", 10000, 10, locationListener);
     }
 
     @Override

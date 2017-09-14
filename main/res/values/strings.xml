@@ -4,6 +4,7 @@
     <string name="options_settings">Options</string>
     <string name="results_settings">Results</string>
     <string name="btnDoSomething">Do Something Now!</string>
+    <string name="getMyLocation">Get My Location</string>
     <string name="title_activity_settings">Settings Activity</string>
     <string name="title_activity_results">Results Activity</string>
     <string name="title_activity_options">Options Activity</string>
