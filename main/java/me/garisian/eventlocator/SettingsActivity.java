@@ -2,11 +2,8 @@ package me.garisian.eventlocator;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,21 +14,40 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-
 import me.garisian.utilities.Setting;
 
-public class SettingsActivity extends AppCompatActivity {
 
+/**
+ * SettingsActivity.java
+ * Purpose: Display all settings
+ *
+ * @author Garisian Kana
+ * @version 1.1
+ *
+ * Created on 2017-08-22
+ */
+public class SettingsActivity extends AppCompatActivity
+{
+    // Created to customize settings display
     MyCustomAdapter dataAdapter = null;
 
+    /**
+     * Description: Method gets called the moment activity initiates. Load activity with toolbar,
+     *              and display every setting option with a button for user to select
+     *
+     * @param: Bundle
+     *
+     * @return none
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        // To create the title bar at the top of the screen
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        // Link activity layout to a layout in xml file
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        // Set the toolbar with options for settings etc at top of activity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -39,6 +55,14 @@ public class SettingsActivity extends AppCompatActivity {
         displayListView();
         checkButtonClick();
     }
+
+    /**
+     * Description: Load settings, display them, and wait for user to click on it
+     *
+     * @param: none
+     *
+     * @return none
+     */
     private void displayListView()
     {
         //Array list of settings
@@ -59,7 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
         settingList.add(new Setting("Setting 14"));
         settingList.add(new Setting("Setting 15"));
 
-        // create an ArrayAdaptar from the String Array. Recycles old views instead of creating 1
+        // Create an ArrayAdaptar from the String Array. Recycles old views instead of creating 1
         // for each view and saving
         dataAdapter = new MyCustomAdapter(this, R.layout.settings_info , settingList);
         ListView listView = (ListView) findViewById(R.id.listOfSettings);
@@ -72,8 +96,10 @@ public class SettingsActivity extends AppCompatActivity {
         {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
+
                 // When clicked, show a toast with the TextView text
                 Setting country = (Setting) parent.getItemAtPosition(position);
+
                 // Debugging Purposes. Please Work
                 Toast.makeText(getApplicationContext(),
                         "Clicked on Row: " + country.getName(),
@@ -82,7 +108,15 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
-    private class MyCustomAdapter extends ArrayAdapter<Setting> {
+
+    /**
+     * MyCustomAdapter.java
+     *
+     * Purpose: Custom Adapter to display settings on activity
+     *
+     */
+    private class MyCustomAdapter extends ArrayAdapter<Setting>
+    {
 
         private ArrayList<Setting> settingList;
 
@@ -93,28 +127,42 @@ public class SettingsActivity extends AppCompatActivity {
             this.settingList.addAll(settingList);
         }
 
-        private class ViewHolder {
+        // A View class that represents the data for a single setting
+        private class ViewHolder
+        {
             TextView code;
             CheckBox name;
         }
 
+        /**
+         * Description: Extract data and assign it to a view and wait for user action.
+         *              Get a View that displays the data at the specified position in the data set
+         *
+         * @param: "position" is the position of the item within the adapter's data
+         *         "convertView" is the old view to reuse, if possible.
+         *         "parent" is the parent that this view will eventually be attached to
+         *
+         * @return "View" object corresponding to the data at the specified position
+         */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
             ViewHolder holder = null;
-            Log.v("ConvertView", String.valueOf(position));
 
-            if (convertView == null) {
+            // Extract data and assign it to a view and wait for user action.
+            if (convertView == null)
+            {
                 LayoutInflater vi = (LayoutInflater)getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
                 convertView = vi.inflate(R.layout.settings_info , null);
-                //R.layout.country_info
-                //R.xml.settings_info
+
+                // Create new vew and populate with data
                 holder = new ViewHolder();
                 holder.code = (TextView) convertView.findViewById(R.id.code);
                 holder.name = (CheckBox) convertView.findViewById(R.id.checkBox1);
                 convertView.setTag(holder);
 
+                // Wait for user action and show popup message once clicked
                 holder.name.setOnClickListener( new View.OnClickListener() {
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v ;
@@ -127,10 +175,12 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 });
             }
-            else {
+            else
+            {
                 holder = (ViewHolder) convertView.getTag();
             }
 
+            // Set up what will be displayed for each setting
             Setting country = settingList.get(position);
             holder.name.setText(country.getName());
             holder.name.setChecked(country.isUsed());
@@ -140,14 +190,23 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    // Show a Toast popup message whenever a button is clicked
+    /**
+     * Description: Show a Toast popup message the final button is clicked. Indicate which settings
+     *              were selected
+     *
+     * @param: none
+     *
+     * @return none
+     */
     private void checkButtonClick() {
+        // Add a listener to the top button
         Button myButton = (Button) findViewById(R.id.findSelected);
         myButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
+                // Go through every setting and collect the selected ones and toast the message
                 StringBuffer responseText = new StringBuffer();
                 responseText.append("The following were selected...\n");
 
@@ -162,6 +221,5 @@ public class SettingsActivity extends AppCompatActivity {
                         responseText, Toast.LENGTH_LONG).show();
             }
         });
-
     }
 }

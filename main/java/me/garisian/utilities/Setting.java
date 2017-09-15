@@ -1,11 +1,14 @@
 package me.garisian.utilities;
 
 /**
- * Created by garis on 2017-08-30.
+ * Setting.java
+ * Purpose: Template used to structure settings
+ *
+ * @author Garisian Kana
+ * @version 1.1
+ *
+ * Created on 2017-08-30
  */
-/*
-    This class is a template for a setting option in the Main Menu.
-*/
 public class Setting
 {
     private String name;
@@ -17,7 +20,9 @@ public class Setting
         used = false;
     }
 
-    // Getter and Setters for Setting Variablesf
+    /**
+     * Description: A series of getters and setters for the class variables
+     */
     public void changeName(String name)
     {
         this.name = name;
@@ -40,10 +45,5 @@ public class Setting
 
     public void setTrigger(Boolean s) { used = s; }
 
-    public boolean isUsed()
-    {
-        return used;
-    }
-
-
+    public boolean isUsed() { return used; }
 }

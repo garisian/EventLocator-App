@@ -1,12 +1,16 @@
 package me.garisian.utilities;
 
 import android.text.Editable;
-import android.widget.EditText;
 
 /**
- * Created by garis on 2017-08-22.
+ * GoogleLocation.java
+ * Purpose: Made to keep reusable methods
+ *
+ * @author Garisian Kana
+ * @version 1.0
+ *
+ * Created on 2017-08-22
  */
-
 public class Utilities
 {
     /*

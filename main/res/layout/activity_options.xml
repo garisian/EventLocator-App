@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +8,9 @@
     android:orientation="vertical"
     tools:context="me.garisian.eventlocator.OptionsActivity">
 
-
+    <!--
+    MenuBar at top of App which autofills with other options
+    -->
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,13 +40,18 @@
         android:layout_height="wrap_content" android:padding="10dp"
         android:text="@string/some_text" android:textSize="20sp" />
 
-
+    <!--
+   Button that is used to get the selected options and move onto the results
+    -->
     <Button
         android:id="@+id/findSelected"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Choose Your Options --- ACTIVITY-OPTIONS.XML" />
 
+    <!--
+    A list of options which get populated dynamically
+    -->
     <ListView android:id="@+id/listOfOptions" android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 

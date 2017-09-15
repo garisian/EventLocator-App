@@ -1,25 +1,28 @@
 package me.garisian.utilities;
 
-import android.util.Log;
-
 /**
- * Created by garis on 2017-09-10.
+ * Option.java
+ * Purpose: Template used to structure options which are pulled from a text file
+ *
+ * @author Garisian Kana
+ * @version 1.1
+ *
+ * Created on 2017-09-10
  */
-
 public class Option
 {
     private String name;
     private boolean used;
 
-    public Option(String name) throws Exception
+    public Option(String name)
     {
         this.name = name;
         used = false;
-        Log.i("LALALALALALLALALALAA", System.getProperty("user.dir"));
-
     }
 
-    // Getter and Setters for Setting Variablesf
+    /**
+     * Description: A series of getters and setters for the class variables
+     */
     public void changeName(String name)
     {
         this.name = name;

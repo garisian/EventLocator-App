@@ -1,25 +1,67 @@
 package me.garisian.utilities;
 
 /**
- * Created by garis on 2017-09-06.
+ * GoogleLocation.java
+ * Purpose: Template used to structure locations from JSON result
+ *
+ * @author Garisian Kana
+ * @version 1.1
+ *
+ * Created on 2017-09-06
  */
-/*
-    This class is a template for a location result from a POST query.
-*/
 public class GoogleLocation
 {
+    // Variable elemnts used to store info regarding a result location
     private String name;
     private String rating;
     private boolean currentlyOpen;
     private double distanceFromUser;
+    private int maxHeight;
+    private int maxWidth;
+    private String photoReference;
+    private String address;
 
-    public GoogleLocation()
+    /**
+     * Description: Constructor that requires the rating and name of restaurant. Constructor
+     *              will not be invoked unless restaurant has both a valid name and rating.
+     *              Certain resturants do not specify Opening/Closing hours so default to close;
+     *
+     * @param: "name" for restaurant name
+     *         "rating" for the restauran'ts rating
+     *
+     * @return CONSTRUCTOR method
+     */
+    public GoogleLocation(String name, String rating)
     {
-        this.name = "";
-        this.rating = "";
+        this.name = name;
+        this.rating = rating;
         this.currentlyOpen = false;
     }
 
+    /**
+     * Description: Compute straight line distance from user specified location and results'
+     *              location
+     *
+     * @param: "lat1" and "lng1" represent the latitude and longitude of the current location
+     *         "lat2" and "lng2" represent the latitude and longitude of the result location
+     *
+     * @return VOID method
+     */
+    public void setDistanceFromCoordinates(double lat1, double lon1, double lat2, double lon2)
+    {
+        double R = 6378.137; // Radius of earth in KM
+        double dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
+        double dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180;
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                        Math.sin(dLon/2) * Math.sin(dLon/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        distanceFromUser = R * c;
+    }
+
+    /**
+     * Description: A series of getters and setters for the class variables
+     */
     public void setName(String name)
     {
         this.name = name;
@@ -50,20 +92,33 @@ public class GoogleLocation
         return currentlyOpen;
     }
 
-    public void setDistanceFromCoordinates(float lat1, float lon1, float lat2, float lon2)
-    {
-        double R = 6378.137; // Radius of earth in KM
-        double dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
-        double dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180;
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                        Math.sin(dLon/2) * Math.sin(dLon/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        distanceFromUser = R * c;
-    }
-
     public double getDistance()
     {
         return distanceFromUser;
+    }
+
+    public void setPhotoReference(String photoReference)
+    {
+        this.photoReference = photoReference;
+    }
+
+    public String getPhotoReference()
+    {
+        return photoReference;
+    }
+
+    public double[] getPhotoHeightWidth()
+    {
+        return new double[]{maxHeight, maxWidth};
+    }
+
+    public String getAddress() { return address; }
+
+    public void setAddress(String address) { this.address = address; }
+
+    public void setPhotoHeightWidth(int maxHeight, int maxWidth)
+    {
+        this.maxHeight = maxHeight;
+        this.maxWidth = maxWidth;
     }
 }
