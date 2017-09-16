@@ -22,6 +22,8 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -47,7 +49,7 @@ public class ResultsActivity extends AppCompatActivity {
     private String userOptions;
     private String locationLatitude;
     private String locationLongtitude;
-    private int radius = 500;
+    private int radius = 5000;
 
     // List of locations retrieved from Google
     ArrayList<GoogleLocation> googlePlaceList = new ArrayList<GoogleLocation>();
@@ -210,8 +212,8 @@ public class ResultsActivity extends AppCompatActivity {
                     "location="+locationLatitude+","+locationLongtitude+
                     "&type="+userOptions+
                     "&radius="+radius+
-                    "&rankBy=distance"+
                     "&key=AIzaSyBfxw5cINgN7q89t-HGIsnsb6lRUDU8rjQ";
+            //String requestURL2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+locationLatitude+","+locationLongtitude+"&rankby=distance&types=food&key=AIzaSyBfxw5cINgN7q89t-HGIsnsb6lRUDU8rjQ";
 
             // Send the request and store the response in a bufferedreader
             WebsiteParsing s = new WebsiteParsing(requestURL);
@@ -233,7 +235,7 @@ public class ResultsActivity extends AppCompatActivity {
                 {
                     if(jsonArray.getJSONObject(i).has("name"))
                     {
-                        GoogleLocation place = new GoogleLocation(jsonArray.getJSONObject(i).optString("name"),jsonArray.getJSONObject(i).optString("rating", " "));
+                        GoogleLocation place = new GoogleLocation(jsonArray.getJSONObject(i).optString("name"),jsonArray.getJSONObject(i).optString("rating"));
                         if (jsonArray.getJSONObject(i).has("opening_hours"))
                         {
                             if (jsonArray.getJSONObject(i).getJSONObject("opening_hours").has("open_now"))
@@ -262,13 +264,18 @@ public class ResultsActivity extends AppCompatActivity {
 
                         // Based on the current coordinates and location's coordinates, extract the
                         // straight line distance
-                        JSONObject json = jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
-                        float currentLatitude = Float.parseFloat(json.get("lat").toString());
-                        float currentLongitude = Float.parseFloat(json.get("lng").toString())    ;
-                        place.setDistanceFromCoordinates(Float.parseFloat(locationLatitude),Float.parseFloat(locationLongtitude),currentLatitude,currentLongitude);
+                        JSONObject json = jsonArray.getJSONObject(i).getJSONObject("geometry").getJSONObject("location");
+                        place.setLatitude(json.get("lat").toString());
+                        place.setLongitude(json.get("lng").toString());
+                        //float currentLatitude = Float.parseFloat(json.get("lat").toString());
+                        //float currentLongitude = Float.parseFloat(json.get("lng").toString());
+                        //place.setDistanceFromCoordinates(Float.parseFloat(locationLatitude),Float.parseFloat(locationLongtitude),currentLatitude,currentLongitude);
                         googlePlaceList.add(place);
                     }
                 }
+
+                // Send another post request with every location and find the distance
+                updateDistances();
             }
             catch(IOException e)
             {
@@ -288,6 +295,82 @@ public class ResultsActivity extends AppCompatActivity {
         }
 
         /**
+         * Description: Find distances for every single locations in a single request
+         *
+         * @param: none
+         *
+         * @return none
+         */
+        public void updateDistances()
+        {
+            // Keep a spare arraylist to keep order in the rare case the device code changed and
+            // reordered locations
+            List<GoogleLocation> myList = new ArrayList<GoogleLocation>();
+            String destinations = "";
+            // Structure for distance matrix googleapi post request
+
+            for(GoogleLocation location: googlePlaceList)
+            {
+                myList.add(location);
+                if(destinations == "")
+                {
+                    destinations+=location.getLatitude()+","+location.getLongitude();
+                }
+                else
+                {
+                    destinations+="|"+location.getLatitude()+","+location.getLongitude();
+                }
+
+            }
+            //Log.i(TAG,destinations);
+            //Log.i(TAG,locationLatitude);
+            //Log.i(TAG,locationLongtitude);
+            String distanceRequtest = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric"+
+                    "&origins="+locationLatitude+","+locationLongtitude+
+                    "&destinations="+destinations+
+                    "&key=AIzaSyBfxw5cINgN7q89t-HGIsnsb6lRUDU8rjQ";
+
+            // Send the request and store the response in a bufferedreader
+            WebsiteParsing s = new WebsiteParsing(distanceRequtest);
+            s.loadWebsiteContents();
+
+            // Read the content and populate each location as a GoogleLocation object
+            try
+            {
+                // Get the BufferedReader and convert it into JSON Object
+                BufferedReader dataPipe = s.getReader();
+                dataString = convertToString(dataPipe);
+                JSONObject jsonObj = new JSONObject(dataString);
+
+                // Iterate through each result in JSON and set the distance from user's address
+                JSONArray jsonArray = jsonObj.getJSONArray("rows").getJSONObject(0).getJSONArray("elements");
+                for (int i = 0; i < jsonArray.length(); i++)
+                {
+                    String distance = jsonArray.getJSONObject(i).getJSONObject("distance").get("text").toString();
+                    myList.get(i).setDistance(distance);
+                }
+
+            }
+            catch(IOException e)
+            {
+                Log.v(TAG, "Something terribly went wrong. Results Activity: IOException caught");
+                Log.v(TAG, e.toString());
+            }
+            catch(JSONException e)
+            {
+                Log.v(TAG, "Something terribly went wrong. Results Activity: JSONException caught");
+                Log.v(TAG, e.toString());
+            }
+            catch(Exception e)
+            {
+                Log.v(TAG, "Something terribly went wrong. Results Activity: Exception caught");
+                Log.v(TAG, e.toString());
+            }
+
+        }
+
+
+        /**
          * Description: Convert a bufferedreader to a String
          *
          * @param: "datapipe" is a bufferedreader containing the data that needs to be converted
@@ -301,6 +384,7 @@ public class ResultsActivity extends AppCompatActivity {
             while((line=dataPipe.readLine())!= null)
             {
                 combined += line;
+                //Log.i("GET THIS",line);
             }
             dataPipe.close();
             return combined;
@@ -348,6 +432,7 @@ public class ResultsActivity extends AppCompatActivity {
             TextView locationNameField;
             TextView locationOpenOrNot;
             TextView placeholderAddress;
+            TextView distancePlaceHolder;
             RatingBar locationRating;
         }
 
@@ -379,6 +464,7 @@ public class ResultsActivity extends AppCompatActivity {
                 holder.locationOpenOrNot = (TextView) convertView.findViewById(R.id.locationOpenOrNot);
                 holder.placeholderAddress = (TextView) convertView.findViewById(R.id.placeholderAddress);
                 holder.locationRating = (RatingBar) convertView.findViewById(R.id.locationRating);
+                holder.distancePlaceHolder = (TextView) convertView.findViewById(R.id.distancePlaceHolder);
                 convertView.setTag(holder);
 
                 // Wait for user action and show popup message once clicked
@@ -406,10 +492,23 @@ public class ResultsActivity extends AppCompatActivity {
             holder.locationNameField.setText(location.getName());
             holder.locationOpenOrNot.setText(isOpen);
             holder.placeholderAddress.setText(location.getAddress());
-            holder.locationRating.setRating(Float.parseFloat(location.getRating()));
+
+            // Certain locations do not have a rating available. In that case show nothing
+            if(location.getRating().equals(""))
+            {
+                holder.locationRating.setRating(0);
+                holder.locationRating.setVisibility(View.INVISIBLE);
+            }
+            else
+            {
+                holder.locationRating.setVisibility(View.VISIBLE);
+                holder.locationRating.setRating(Float.parseFloat(location.getRating()));
+            }
+            holder.distancePlaceHolder.setText(location.getDistance());
             return convertView;
         }
     }
+
     /**
      * Description: Set Up which xml style the results will be shown in and get the correct element
      *              ID

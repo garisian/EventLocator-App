@@ -13,13 +13,16 @@ public class GoogleLocation
 {
     // Variable elemnts used to store info regarding a result location
     private String name;
-    private String rating;
+    private String rating = "";
     private boolean currentlyOpen;
     private double distanceFromUser;
     private int maxHeight;
     private int maxWidth;
     private String photoReference;
     private String address;
+    private String longitude;
+    private String latitude;
+    private String distance;
 
     /**
      * Description: Constructor that requires the rating and name of restaurant. Constructor
@@ -60,6 +63,19 @@ public class GoogleLocation
     }
 
     /**
+     * Description: Compute straight line distance from user specified location and results'
+     *              location
+     *
+     * @param: "distance" is a string representation of a distance with commas and units
+     *
+     * @return VOID method
+     */
+    public void setDistance(String distance)
+    {
+        this.distance = distance;
+    }
+
+    /**
      * Description: A series of getters and setters for the class variables
      */
     public void setName(String name)
@@ -92,9 +108,9 @@ public class GoogleLocation
         return currentlyOpen;
     }
 
-    public double getDistance()
+    public String getDistance()
     {
-        return distanceFromUser;
+        return distance;
     }
 
     public void setPhotoReference(String photoReference)
@@ -115,6 +131,14 @@ public class GoogleLocation
     public String getAddress() { return address; }
 
     public void setAddress(String address) { this.address = address; }
+
+    public String getLongitude() { return longitude; }
+
+    public void setLongitude(String longitude) { this.longitude = longitude; }
+
+    public String getLatitude() { return latitude; }
+
+    public void setLatitude(String latitude) { this.latitude = latitude; }
 
     public void setPhotoHeightWidth(int maxHeight, int maxWidth)
     {

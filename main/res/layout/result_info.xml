@@ -59,10 +59,9 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/DistancePlaceHolder"
+        android:id="@+id/distancePlaceHolder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="9999km"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
