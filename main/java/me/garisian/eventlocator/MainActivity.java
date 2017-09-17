@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -41,6 +42,9 @@ import me.garisian.utilities.GPSTracker;
  * Created on 2017-08-21
  */
 public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
+
+    // Time interval for Splash Page
+    private static int SPLASH_TIME_OUT = 4000;
 
     // Used for Debugging purposes
     static String TAG = "MainActivity";
