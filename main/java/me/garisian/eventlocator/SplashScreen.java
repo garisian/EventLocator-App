@@ -3,10 +3,13 @@ import android.media.Image;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
 public class SplashScreen extends Activity {
 
     Thread splashTread;
@@ -18,13 +21,12 @@ public class SplashScreen extends Activity {
 
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
         anim.reset();
-        LinearLayout l=(LinearLayout) findViewById(R.id.lin_lay);
+        ConstraintLayout l=(ConstraintLayout) findViewById(R.id.lin_lay);
         l.clearAnimation();
         l.startAnimation(anim);
-
         anim = AnimationUtils.loadAnimation(this, R.anim.translate);
         anim.reset();
-        ImageView iv = (ImageView) findViewById(R.id.splash);
+        TextView iv = (TextView) findViewById(R.id.splash);
         iv.clearAnimation();
         iv.startAnimation(anim);
 
@@ -35,7 +37,7 @@ public class SplashScreen extends Activity {
                 try {
                     int waited = 0;
                     // Splash screen pause time
-                    while (waited < 3500) {
+                    while (waited < 4500) {
                         sleep(100);
                         waited += 100;
                     }

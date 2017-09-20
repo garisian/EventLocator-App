@@ -78,6 +78,9 @@ public class AddressActivity extends AppCompatActivity implements GoogleMap.OnMa
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Hide the default title
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         // Map button for getting user's location
         btnGetLoc = (Button) findViewById(R.id.btnGetLoc);
 

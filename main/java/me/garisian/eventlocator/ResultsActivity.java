@@ -91,6 +91,9 @@ public class ResultsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Hide the default title
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         // Print User input from main activity
         getUserInput();
 

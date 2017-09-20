@@ -32,13 +32,25 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
 
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/whatUserWants"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Button"
+                android:textSize="20sp" />
+        </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-    <TextView android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/selectedElements"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content" android:padding="10dp"
-        android:text="@string/some_text" android:textSize="20sp" />
+        android:text="You Selected: " android:textSize="20sp" />
 
     <!--
    Button that is used to get the selected options and move onto the results
@@ -47,7 +59,7 @@
         android:id="@+id/findSelected"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose Your Options --- ACTIVITY-OPTIONS.XML" />
+        android:text="Find Some Locations!" />
 
     <!--
     A list of options which get populated dynamically

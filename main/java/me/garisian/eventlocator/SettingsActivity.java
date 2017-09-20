@@ -51,6 +51,9 @@ public class SettingsActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Hide the default title
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         // Display the option items and wait for user action
         displayListView();
         checkButtonClick();

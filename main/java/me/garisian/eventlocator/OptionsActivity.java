@@ -38,8 +38,6 @@ import me.garisian.utilities.Option;
  */
 public class OptionsActivity extends AppCompatActivity
 {
-
-
     // Used for Debugging purposes
     private String TAG = "OptionsActivity";
 
@@ -50,6 +48,8 @@ public class OptionsActivity extends AppCompatActivity
     // Mapped display strings to google query strings
     Map<String,String> optionsMapping =  new HashMap<String,String>();
 
+    // Keep Track of What User Selected
+    final Map<String,String> selectedList = new HashMap<String, String>();
 
     /**
      * Description: Method to remove animations from clicking back inbetween activities
@@ -83,6 +83,9 @@ public class OptionsActivity extends AppCompatActivity
         // Set the toolbar with options for settings etc at top of activity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Hide the default title
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Display the option items and wait for user action
         displayListView();
@@ -291,6 +294,18 @@ public class OptionsActivity extends AppCompatActivity
                                         " is " + cb.isChecked(),
                                 Toast.LENGTH_LONG).show();
                         country.setTrigger(cb.isChecked());
+
+                        // Update selected list to show user
+                        if(cb.isChecked())
+                        {
+                            selectedList.put(cb.getText().toString(),"");
+                        }
+                        else
+                        {
+                            selectedList.remove(cb.getText().toString());
+                        }
+
+                        updateSelected();
                     }
                 });
             }
@@ -306,6 +321,26 @@ public class OptionsActivity extends AppCompatActivity
 
             return convertView;
         }
+
+        /**
+         * Description: Update textfield which shows user what was selected
+         *
+         * @param: none
+         *
+         * @return none
+         */
+        private void updateSelected()
+        {
+            TextView toolbar = (TextView) findViewById(R.id.selectedElements);
+            String fullList = "You Selected: ";
+            //Log.i(TAG,selectedList.toString());
+            for ( String key : selectedList.keySet() )
+            {
+                fullList+=fullList.equals("You Selected: ")?key:", "+key;
+            }
+            toolbar.setText(fullList);
+        }
+
     }
 
 }
