@@ -59,6 +59,20 @@ public class ResultsActivity extends AppCompatActivity {
     private String dataString = "";
 
     /**
+     * Description: Method to remove animations from clicking back inbetween activities
+     *
+     * @param: Bundle
+     *
+     * @return none
+     */
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        overridePendingTransition(0, 0);
+    }
+
+    /**
      * Description: Method gets called the moment activity initiates. Load activity with toolbar,
      *              and display every option option with a button for user to select
      *

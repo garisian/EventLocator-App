@@ -8,7 +8,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -32,16 +31,16 @@ import me.garisian.utilities.GPSTracker;
 
 
 /**
- * MainActivity.java
- * Purpose: Initial activity for the app. Display a google map and textbox for user to type an
- *          address to base results off.
+ * AddressActivity.java
+ * Purpose:  Display a google map and textbox for user to type an address to base results off.
+ *
  *
  * @author Garisian Kana
  * @version 1.1
  *
  * Created on 2017-08-21
  */
-public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
+public class AddressActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
 
     // Time interval for Splash Page
     private static int SPLASH_TIME_OUT = 4000;
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarke
     {
         // Link activity layout to a layout in xml file
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_address);
 
         // Set the toolbar with options for settings etc at top of activity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarke
         btnGetLoc = (Button) findViewById(R.id.btnGetLoc);
 
         // Request permission from user
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]
+        ActivityCompat.requestPermissions(AddressActivity.this, new String[]
                 {Manifest.permission.ACCESS_FINE_LOCATION},123);
 
         // Extract user's current coordinates and display on googlemap and update Textbox with
@@ -139,10 +138,11 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarke
 
                 // Create a bundle to pass in data to options activity
                 Bundle infoBundle = new Bundle();
-                Intent myIntent = new Intent(MainActivity.this, OptionsActivity.class);
+                Intent myIntent = new Intent(AddressActivity.this, OptionsActivity.class);
                 infoBundle.putString("inputAddress", inputAddressString);
                 myIntent.putExtras(infoBundle);
                 startActivity(myIntent);
+                overridePendingTransition(0, 0);
             }
         });
 

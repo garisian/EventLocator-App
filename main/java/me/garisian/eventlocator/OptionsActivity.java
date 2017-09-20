@@ -38,6 +38,8 @@ import me.garisian.utilities.Option;
  */
 public class OptionsActivity extends AppCompatActivity
 {
+
+
     // Used for Debugging purposes
     private String TAG = "OptionsActivity";
 
@@ -47,6 +49,21 @@ public class OptionsActivity extends AppCompatActivity
 
     // Mapped display strings to google query strings
     Map<String,String> optionsMapping =  new HashMap<String,String>();
+
+
+    /**
+     * Description: Method to remove animations from clicking back inbetween activities
+     *
+     * @param: Bundle
+     *
+     * @return none
+     */
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        overridePendingTransition(0, 0);
+    }
 
     /**
      * Description: Method gets called the moment activity initiates. Load activity with toolbar,
@@ -207,9 +224,11 @@ public class OptionsActivity extends AppCompatActivity
                     Intent myIntent = new Intent(OptionsActivity.this, ResultsActivity.class);
                     myIntent.putExtras(infoBundle);
                     startActivity(myIntent);
+                    overridePendingTransition(0, 0);
                 }
             }
         });
+
     }
 
     /**

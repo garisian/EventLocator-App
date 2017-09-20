@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="me.garisian.eventlocator.MainActivity">
+    tools:context="me.garisian.eventlocator.AddressActivity">
 
     <!--
     MenuBar at top of App which autofills with other options
@@ -35,6 +35,15 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        android:id="@+id/listOfResults"
+
+    </LinearLayout>
+
 
     <!--
    Textbox where user is prompt to write an address
