@@ -45,6 +45,8 @@ public class Option
 
     public void setTrigger(Boolean s) { used = s; }
 
+    public void flipTrigger() { used = !used; }
+
     public boolean isUsed()
     {
         return used;

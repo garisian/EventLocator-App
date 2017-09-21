@@ -6,9 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#00BFFF"
     tools:context="me.garisian.eventlocator.OptionsActivity">
 
-    <!--
+    <!--   5DDEE5
     MenuBar at top of App which autofills with other options
     -->
     <android.support.design.widget.AppBarLayout
@@ -46,11 +47,11 @@
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
+<!--    <TextView
         android:id="@+id/selectedElements"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" android:padding="10dp"
-        android:text="You Selected: " android:textSize="20sp" />
+        android:text="You Selected: " android:textSize="20sp" />-->
 
     <!--
    Button that is used to get the selected options and move onto the results
@@ -59,15 +60,29 @@
         android:id="@+id/findSelected"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Find Some Locations!" />
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:background="@drawable/option_submit"
 
-    <!--
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="Click Here When Finished!" />
+
+<!--    &lt;!&ndash;
     A list of options which get populated dynamically
-    -->
+    &ndash;&gt;
     <ListView android:id="@+id/listOfOptions" android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent" />-->
 
-
+    <GridView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/myGridView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:numColumns="2" />
 </LinearLayout>
 
 

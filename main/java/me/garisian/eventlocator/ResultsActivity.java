@@ -49,7 +49,7 @@ public class ResultsActivity extends AppCompatActivity {
     private String userOptions;
     private String locationLatitude;
     private String locationLongtitude;
-    private int radius = 5000;
+    private int radius = 500;
 
     // List of locations retrieved from Google
     ArrayList<GoogleLocation> googlePlaceList = new ArrayList<GoogleLocation>();

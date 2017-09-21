@@ -12,9 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.BufferedReader;
@@ -22,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +46,7 @@ public class OptionsActivity extends AppCompatActivity
     private String TAG = "OptionsActivity";
 
     // Created to customize settings display
-    MyCustomOptionsAdapter dataAdapter = null;
+    CustomGridAdapter dataAdapter = null;
     String optionList = "";
 
     // Mapped display strings to google query strings
@@ -106,28 +110,110 @@ public class OptionsActivity extends AppCompatActivity
         ArrayList<Option> optionList = new ArrayList<Option>();
         populateOptions(optionList);
 
-        // create an ArrayAdaptar from the String Array. Recycles old views instead of creating 1
-        // for each view and saving
-        dataAdapter = new MyCustomOptionsAdapter(this, R.layout.settings_info , optionList);
-        ListView listView = (ListView) findViewById(R.id.listOfOptions);
+        // Getting a reference to gridview of MainActivity
+        GridView gridView = (GridView) findViewById(R.id.myGridView);
+        CustomGridAdapter gridAdapter = new CustomGridAdapter(OptionsActivity.this, optionList);
 
-        // Assign adapter to ListView
-        listView.setAdapter(dataAdapter);
-
-        // Deal with Item Clicks
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                // When clicked, show a toast with the TextView text
-                Option country = (Option) parent.getItemAtPosition(position);
-                // Debugging Purposes. Please Work
-                Toast.makeText(getApplicationContext(),
-                        "Clicked on Row: " + country.getName(),
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+        // Setting an adapter containing images to the gridview
+        gridView.setAdapter(gridAdapter);
     }
+
+
+    public class CustomGridAdapter extends BaseAdapter {
+
+        private Context context;
+        private ArrayList<Option> items;
+        LayoutInflater inflater;
+        int position;
+        Button button;
+
+        public CustomGridAdapter(Context context, ArrayList<Option> items) {
+            this.context = context;
+            this.items = items;
+        }
+
+        public View getView(final int position, View convertView, ViewGroup parent)
+        {
+
+            if (convertView == null) {
+                inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.options_gridview, null);
+            }
+            this.position = position;
+            Button button = (Button) convertView.findViewById(R.id.grid_item);
+            button.setText(items.get(position).getName());
+
+
+            button.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Button cb = (Button) v ;
+                    Option country = (Option) cb.getTag();
+/*
+                    Toast.makeText(getApplicationContext(),
+                            "Clicked on mooooooooo: " + cb.getText() ,
+                            Toast.LENGTH_LONG).show();
+*/
+                    // When clicked, show a toast with the TextView text
+                    Option singleOption = (Option) items.get(position);
+                    // Debugging Purposes. Please Work
+                    Toast.makeText(getApplicationContext(),
+                            "Clicked on Row: " + singleOption.getName(),
+                            Toast.LENGTH_LONG).show();
+
+
+                    items.get(position).setTrigger(items.get(position).isUsed()? false:true);
+                    // Update selected list to show user
+                    if(items.get(position).isUsed())
+                    {
+                        selectedList.put(items.get(position).getName(),"");
+                        v.setBackgroundResource(R.drawable.option_chosen_button);
+                    }
+                    else
+                    {
+                        selectedList.remove(items.get(position).getName());
+                        v.setBackgroundResource(R.drawable.option_not_chosen_button);
+                    }
+
+                    //updateSelected();
+                }
+            });
+            Log.i("LALALALA -- INSIDE","----------------------------");
+            Log.i("LALALALA -- INSIDE",items.get(position).getName());
+            Log.i("LALALALA -- INSIDE",Boolean.toString(items.get(position).isUsed()));
+            Log.i("LALALALA -- INSIDE","----------------------------");
+            if(items.get(position).isUsed())
+            {
+                selectedList.put(items.get(position).getName(),"");
+                button.setBackgroundResource(R.drawable.option_chosen_button);
+            }
+            else
+            {
+                selectedList.remove(items.get(position).getName());
+                button.setBackgroundResource(R.drawable.option_not_chosen_button);
+            }
+
+            return convertView;
+        }
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+    }
+
 
     /**
      * Description: Go through every option in the external file and create an Option object and
@@ -192,21 +278,19 @@ public class OptionsActivity extends AppCompatActivity
 
                 // Go through the list of options and gather selected options to pass onto results
                 // activity
-                ArrayList<Option> countryList = dataAdapter.settingList;
-                for(int i=0;i<countryList.size();i++){
-                    Option setting = countryList.get(i);
-                    if(setting.isUsed())
+                for ( String key : selectedList.keySet() )
+                {
+                    if(optionList.equals(""))
                     {
-                        if(optionList.equals(""))
-                        {
-                            optionList+=optionsMapping.get(setting.getName()).trim();
-                            Log.v("OPTIONSACTIVITY", optionList);
-                        }
-                        else
-                        {
-                            optionList+="|"+optionsMapping.get(setting.getName()).trim();
-                            Log.v("OPTIONSACTIVITY", optionList);
-                        }
+                        optionList+=optionsMapping.get(key).trim();
+                        Log.v("OPTIONSACTIVITY", key);
+                        Log.v("OPTIONSACTIVITY", key.trim());
+                    }
+                    else
+                    {
+                        optionList+="|"+optionsMapping.get(key).trim();
+                        Log.v("OPTIONSACTIVITY", optionList);
+                        Log.v("OPTIONSACTIVITY", key);
                     }
                 }
 
@@ -233,114 +317,4 @@ public class OptionsActivity extends AppCompatActivity
         });
 
     }
-
-    /**
-     * MyCustomOptionsAdapter.java
-     *
-     * Purpose: Custom Adapter to display settings on activity
-     *
-     */
-    private class MyCustomOptionsAdapter extends ArrayAdapter<Option>
-    {
-        private ArrayList<Option> settingList;
-
-        public MyCustomOptionsAdapter(Context context, int textViewResourceId, ArrayList<Option> settingList)
-        {
-            super(context, textViewResourceId, settingList);
-            this.settingList = new ArrayList<Option>();
-            this.settingList.addAll(settingList);
-        }
-
-        // A View class that represents the data for a single setting
-        private class ViewHolder {
-            TextView code;
-            CheckBox name;
-        }
-
-        /**
-         * Description: Extract data and assign it to a view and wait for user action.
-         *              Get a View that displays the data at the specified position in the data set
-         *
-         * @param: "position" is the position of the item within the adapter's data
-         *         "convertView" is the old view to reuse, if possible.
-         *         "parent" is the parent that this view will eventually be attached to
-         *
-         * @return "View" object corresponding to the data at the specified position
-         */
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder = null;
-
-            // Extract data and assign it to a view and wait for user action.
-            if (convertView == null) {
-                LayoutInflater vi = (LayoutInflater)getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);
-                convertView = vi.inflate(R.layout.settings_info , null);
-
-                // Create new vew and populate with data
-                holder = new ViewHolder();
-                holder.code = (TextView) convertView.findViewById(R.id.code);
-                holder.name = (CheckBox) convertView.findViewById(R.id.checkBox1);
-                convertView.setTag(holder);
-
-                // Wait for user action and show popup message once clicked
-                holder.name.setOnClickListener( new View.OnClickListener() {
-                    public void onClick(View v) {
-                        CheckBox cb = (CheckBox) v ;
-                        Option country = (Option) cb.getTag();
-                        Toast.makeText(getApplicationContext(),
-                                "Clicked on Checkbox: " + cb.getText() +
-                                        " is " + cb.isChecked(),
-                                Toast.LENGTH_LONG).show();
-                        country.setTrigger(cb.isChecked());
-
-                        // Update selected list to show user
-                        if(cb.isChecked())
-                        {
-                            selectedList.put(cb.getText().toString(),"");
-                        }
-                        else
-                        {
-                            selectedList.remove(cb.getText().toString());
-                        }
-
-                        updateSelected();
-                    }
-                });
-            }
-            else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            // Set up what will be displayed for each option
-            Option country = settingList.get(position);
-            holder.name.setText(country.getName());
-            holder.name.setChecked(country.isUsed());
-            holder.name.setTag(country);
-
-            return convertView;
-        }
-
-        /**
-         * Description: Update textfield which shows user what was selected
-         *
-         * @param: none
-         *
-         * @return none
-         */
-        private void updateSelected()
-        {
-            TextView toolbar = (TextView) findViewById(R.id.selectedElements);
-            String fullList = "You Selected: ";
-            //Log.i(TAG,selectedList.toString());
-            for ( String key : selectedList.keySet() )
-            {
-                fullList+=fullList.equals("You Selected: ")?key:", "+key;
-            }
-            toolbar.setText(fullList);
-        }
-
-    }
-
 }
