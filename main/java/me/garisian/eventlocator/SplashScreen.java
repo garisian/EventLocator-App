@@ -10,15 +10,27 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * SplashScreen.java
+ * Purpose:  Display a 4 second title screen before main activity
+ *
+ *
+ * @author Garisian Kana
+ * @version 1.1
+ *
+ * Created on 2017-08-15
+ */
 public class SplashScreen extends Activity {
 
     Thread splashTread;
     ImageView imageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splashscreen);
-
+        
+        // Load up each animation from the relative file and run
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
         anim.reset();
         ConstraintLayout l=(ConstraintLayout) findViewById(R.id.lin_lay);
@@ -30,7 +42,7 @@ public class SplashScreen extends Activity {
         iv.clearAnimation();
         iv.startAnimation(anim);
 
-
+        // Run the animations and wait said seconds
         splashTread = new Thread() {
             @Override
             public void run() {
