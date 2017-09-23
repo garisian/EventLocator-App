@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#00BFFF"
     tools:context="me.garisian.eventlocator.AddressActivity">
 
     <!--
@@ -63,9 +64,15 @@
         android:id="@+id/DataInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textColor="#FFFFFF"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name" />
+        android:text="Ex: 123 Fake Road, Toronto" />
 
     <!--
     Button which is used move ontot he options page
@@ -74,6 +81,16 @@
         android:id="@+id/btnDoSomething"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
+        android:background="@drawable/option_submit"
+
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+
         android:text="@string/btnDoSomething"
         app:layout_anchorGravity="center_vertical|right"
         />
@@ -89,6 +106,17 @@
             android:id="@+id/btnGetLoc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
+
+            android:background="@drawable/option_submit"
+
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+
             android:text="@string/getMyLocation"
             app:layout_anchorGravity="center_vertical|right"
             />
@@ -107,6 +135,11 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         tools:context="me.garisian.eventlocator.MapsActivity" />
 
 </LinearLayout>
