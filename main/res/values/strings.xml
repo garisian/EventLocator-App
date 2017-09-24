@@ -12,6 +12,8 @@
     <string name="whatIsUserAddress">What is Your Address</string>
     <string name="whatUserWants">Select Locations Below</string>
     <string name="whatWeFound">Here Is What We Found</string>
+    <string name="defaultEditBoxText"> Ex: 123 Fake Road, Toronto</string>
+
 
     <string name="settings_greeting">Welcome To The Settings!</string>
     <string name="options_greeting">Choose What You Want To Find</string>

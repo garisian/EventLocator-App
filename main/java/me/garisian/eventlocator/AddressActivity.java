@@ -1,6 +1,7 @@
 package me.garisian.eventlocator;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -11,11 +12,15 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,7 +51,7 @@ public class AddressActivity extends AppCompatActivity implements GoogleMap.OnMa
     private static int SPLASH_TIME_OUT = 4000;
 
     // Used for Debugging purposes
-    static String TAG = "MainActivity";
+    static String TAG = "AddressActivity";
 
     // Textbox which stores user's input address
     private EditText inputData;
@@ -87,6 +92,9 @@ public class AddressActivity extends AppCompatActivity implements GoogleMap.OnMa
         // Request permission from user
         ActivityCompat.requestPermissions(AddressActivity.this, new String[]
                 {Manifest.permission.ACCESS_FINE_LOCATION},123);
+
+        // Set up variable to hold textView fragment
+        inputData = (EditText) findViewById(R.id.DataInput);
 
         // Extract user's current coordinates and display on googlemap and update Textbox with
         // respective address
@@ -131,12 +139,13 @@ public class AddressActivity extends AppCompatActivity implements GoogleMap.OnMa
             }
         });
 
+        inputData = (EditText) findViewById(R.id.DataInput);
+
         // On buttonclick, extract the relevent address and pass the data to options activity
         Button btnDoSomething = (Button) (findViewById(R.id.btnDoSomething));
         btnDoSomething.setOnClickListener(new View.OnClickListener() {
             public void onClick(View irrelevant) {
                 // Extract address displayed on textbox
-                inputData = (EditText) findViewById(R.id.DataInput);
                 String inputAddressString = inputData.getText().toString();
 
                 // Create a bundle to pass in data to options activity
@@ -149,10 +158,57 @@ public class AddressActivity extends AppCompatActivity implements GoogleMap.OnMa
             }
         });
 
+
         // Link fragment code in xml to googlemaps and display the google map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        // Clear the textbox if it contains default text onclick
+        cleanTextBox();
+    }
+
+    /**
+     * Description: If default text is shown, clear the textbox. If it's user input, keep it
+     *
+     * @param: none
+     *
+     * @return none
+     */
+    public void cleanTextBox()
+    {
+        // Enable curser when textbox is click and clear the text accordingly
+        inputData.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View editTextView) {
+                // Display curser
+                if (editTextView.getId() == inputData.getId())
+                {
+                    inputData.setCursorVisible(true);
+                }
+
+                // Check if the current string is equal to the default string declared in strings.xml0
+                if(inputData.getText().toString().equals(getString(R.string.defaultEditBoxText)))
+                {
+                    inputData.setText("");
+                }
+            }
+        });
+
+        // On completion or focus loss remove curser
+        inputData.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                inputData.setCursorVisible(false);
+                if (event != null&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+                {
+                    InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    in.hideSoftInputFromWindow(inputData.getApplicationWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+                return false;
+            }
+        });
     }
 
     /**

@@ -159,9 +159,9 @@ public class OptionsActivity extends AppCompatActivity
                     // When clicked, show a toast with the TextView text
                     Option singleOption = (Option) items.get(position);
                     // Debugging Purposes. Please Work
-                    Toast.makeText(getApplicationContext(),
+/*                    Toast.makeText(getApplicationContext(),
                             "Clicked on Row: " + singleOption.getName(),
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_LONG).show();*/
 
 
                     items.get(position).setTrigger(items.get(position).isUsed()? false:true);
