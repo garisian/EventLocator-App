@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#00BFFF"
     tools:context="me.garisian.eventlocator.ResultsActivity">
 
     <!--
@@ -54,15 +55,26 @@
         android:text="@string/insideResults" android:textSize="20sp" />
 -->
 
-    <Button
+    <TextView
         android:id="@+id/findSelected"
         android:layout_width="match_parent"
+        android:gravity="center"
         android:layout_height="wrap_content"
-        android:text="Choose Your Options --- ACTIVITY-RESULTS.XML" />
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:background="@drawable/option_submit"
+
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="Click on a Location for more info!" />
 
     <!--
     A list of resuluts which get populated dynamically based on the response JSON
     -->
-    <ListView android:id="@+id/listOfResults" android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+    <ListView
+        android:id="@+id/listOfResults"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
 </LinearLayout>

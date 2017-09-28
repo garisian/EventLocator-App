@@ -5,18 +5,17 @@
     android:layout_height="wrap_content"
     android:background="@drawable/results_display"
     android:orientation="vertical"
+
+    android:layout_marginBottom="4dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
     android:padding="6dip" >
 
     <!--
     Following templates are used to show all the different settings And Results
     -->
-    <CheckBox
-        android:id="@+id/checkBox1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:focusable="false"
-        android:focusableInTouchMode="false" />
+
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -28,7 +27,9 @@
 
         <TextView
             android:id="@+id/locationNameField"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
+            android:textColor="#FFFFFF"
             android:layout_height="wrap_content"/>
 
 
@@ -44,12 +45,14 @@
 
         <TextView
             android:id="@+id/placeholderAddress"
+            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Placeholder for Address" />
         <TextView
             android:id="@+id/placeholderType"
             android:layout_width="wrap_content"
+            android:textColor="#FFFFFF"
             android:layout_height="wrap_content"
             android:text="Placeholder for Type" />
 
@@ -62,13 +65,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
+        android:textColor="#FFFFFF"
         android:layout_alignParentEnd="true" />
     <TextView
         android:id="@+id/locationOpenOrNot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
         android:text="OPEN"
-        android:layout_below="@+id/checkBox1"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
