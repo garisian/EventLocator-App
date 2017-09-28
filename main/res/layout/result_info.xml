@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/results_display"
     android:orientation="vertical"
     android:padding="6dip" >
 
@@ -24,25 +25,22 @@
         android:layout_toRightOf="@+id/checkBox1"
         android:id="@+id/linearLayout">
 
-        <LinearLayout
+
+        <TextView
+            android:id="@+id/locationNameField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+
+        <RatingBar
+            android:id="@+id/locationRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/locationNameField"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <RatingBar
-                android:id="@+id/locationRating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="?android:attr/ratingBarStyleSmall"
-                android:numStars="5"
-                android:stepSize="0.1"
-                android:isIndicator="true" />
-
-        </LinearLayout>
+            style="?android:attr/ratingBarStyleSmall"
+            android:numStars="5"
+            android:stepSize="0.1"
+            android:isIndicator="true" />
 
         <TextView
             android:id="@+id/placeholderAddress"
