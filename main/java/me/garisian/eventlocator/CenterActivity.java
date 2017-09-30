@@ -15,7 +15,7 @@ import java.util.zip.Inflater;
 /**
  * CenterActivity.java
  * Purpose: Initial activity that dynamically updates content without the need of refreshing
- *
+ *          NOT USED AT THE MOMENT
  * @author Garisian Kana
  * @version 1.1
  *

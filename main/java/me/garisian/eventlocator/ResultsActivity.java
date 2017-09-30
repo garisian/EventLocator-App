@@ -3,7 +3,6 @@ package me.garisian.eventlocator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Rating;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -47,9 +45,9 @@ public class ResultsActivity extends AppCompatActivity {
     // Variables used for the POST call wia google locations api
     private String userAddress;
     private String userOptions;
-    private String locationLatitude;
-    private String locationLongtitude;
-    private int radius = 500;
+    private String userLatitude;
+    private String userLongtitude;
+    private int radius = 5000;
 
     // List of locations retrieved from Google
     ArrayList<GoogleLocation> googlePlaceList = new ArrayList<GoogleLocation>();
@@ -199,8 +197,8 @@ public class ResultsActivity extends AppCompatActivity {
                 // Convert string to a JSON Object for easy Object Extraction
                 JSONObject jsonObj = new JSONObject(combined);
                 JSONObject json = jsonObj.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
-                locationLatitude = json.get("lat").toString();
-                locationLongtitude = json.get("lng").toString();
+                userLatitude = json.get("lat").toString();
+                userLongtitude = json.get("lng").toString();
             }
             catch(IOException e)
             {
@@ -226,11 +224,11 @@ public class ResultsActivity extends AppCompatActivity {
         {
             // Create the request string based on the said variables
             String requestURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"+
-                    "location="+locationLatitude+","+locationLongtitude+
+                    "location="+ userLatitude +","+ userLongtitude +
                     "&type="+userOptions+
                     "&radius="+radius+
                     "&key=AIzaSyBfxw5cINgN7q89t-HGIsnsb6lRUDU8rjQ";
-            //String requestURL2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+locationLatitude+","+locationLongtitude+"&rankby=distance&types=food&key=AIzaSyBfxw5cINgN7q89t-HGIsnsb6lRUDU8rjQ";
+            //String requestURL2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+userLatitude+","+userLongtitude+"&rankby=distance&types=food&key=AIzaSyBfxw5cINgN7q89t-HGIsnsb6lRUDU8rjQ";
 
             // Send the request and store the response in a bufferedreader
             WebsiteParsing s = new WebsiteParsing(requestURL);
@@ -286,7 +284,7 @@ public class ResultsActivity extends AppCompatActivity {
                         place.setLongitude(json.get("lng").toString());
                         //float currentLatitude = Float.parseFloat(json.get("lat").toString());
                         //float currentLongitude = Float.parseFloat(json.get("lng").toString());
-                        //place.setDistanceFromCoordinates(Float.parseFloat(locationLatitude),Float.parseFloat(locationLongtitude),currentLatitude,currentLongitude);
+                        //place.setDistanceFromCoordinates(Float.parseFloat(userLatitude),Float.parseFloat(userLongtitude),currentLatitude,currentLongitude);
                         googlePlaceList.add(place);
                     }
                 }
@@ -340,10 +338,10 @@ public class ResultsActivity extends AppCompatActivity {
 
             }
             //Log.i(TAG,destinations);
-            //Log.i(TAG,locationLatitude);
-            //Log.i(TAG,locationLongtitude);
+            //Log.i(TAG,userLatitude);
+            //Log.i(TAG,userLongtitude);
             String distanceRequtest = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric"+
-                    "&origins="+locationLatitude+","+locationLongtitude+
+                    "&origins="+ userLatitude +","+ userLongtitude +
                     "&destinations="+destinations+
                     "&key=AIzaSyBfxw5cINgN7q89t-HGIsnsb6lRUDU8rjQ";
 
@@ -548,11 +546,22 @@ public class ResultsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
                 // When clicked, show a toast with the TextView text
-                GoogleLocation country = (GoogleLocation) parent.getItemAtPosition(position);
+                GoogleLocation location = (GoogleLocation) parent.getItemAtPosition(position);
                 // Debugging Purposes. Please Work
                 Toast.makeText(getApplicationContext(),
-                        "Clicked on Row: " + country.getName(),
+                        "Clicked on Row: " + location.getName(),
                         Toast.LENGTH_LONG).show();
+
+                // Start a popup session which displays extra details regarding the lcoation
+                Bundle infoBundle = new Bundle();
+                Intent myIntent = new Intent(ResultsActivity.this, LocationDetailsActivity.class);
+                infoBundle.putString("userLongtitude", userLongtitude);
+                infoBundle.putString("userLatitude", userLatitude);
+                infoBundle.putString("locationLongitude",location.getLatitude());
+                infoBundle.putString("locationLatitude",location.getLongitude());
+                myIntent.putExtras(infoBundle);
+                startActivity(myIntent);
+                overridePendingTransition(0, 0);
             }
         });
     }

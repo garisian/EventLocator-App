@@ -13,6 +13,9 @@
     <string name="whatUserWants">Select Locations Below</string>
     <string name="whatWeFound">Here Is What We Found</string>
     <string name="defaultEditBoxText"> Ex: 123 Fake Road, Toronto</string>
+    <string name="title_location_detail">Location Details</string>
+
+
 
 
     <string name="settings_greeting">Welcome To The Settings!</string>

@@ -68,6 +68,12 @@
             android:label="@string/title_activity_options"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".LocationDetailsActivity"
+            android:theme="@style/AppTheme.HideBackground"
+            android:label="@string/title_location_detail"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".HomeActivity"></activity>
     </application>
 
