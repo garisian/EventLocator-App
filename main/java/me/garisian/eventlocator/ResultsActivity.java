@@ -47,7 +47,7 @@ public class ResultsActivity extends AppCompatActivity {
     private String userOptions;
     private String userLatitude;
     private String userLongtitude;
-    private int radius = 5000;
+    private int radius = 500;
 
     // List of locations retrieved from Google
     ArrayList<GoogleLocation> googlePlaceList = new ArrayList<GoogleLocation>();
@@ -548,9 +548,9 @@ public class ResultsActivity extends AppCompatActivity {
                 // When clicked, show a toast with the TextView text
                 GoogleLocation location = (GoogleLocation) parent.getItemAtPosition(position);
                 // Debugging Purposes. Please Work
-                Toast.makeText(getApplicationContext(),
+/*                Toast.makeText(getApplicationContext(),
                         "Clicked on Row: " + location.getName(),
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_LONG).show();*/
 
                 // Start a popup session which displays extra details regarding the lcoation
                 Bundle infoBundle = new Bundle();

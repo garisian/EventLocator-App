@@ -180,10 +180,10 @@ public class OptionsActivity extends AppCompatActivity
                     //updateSelected();
                 }
             });
-            Log.i("LALALALA -- INSIDE","----------------------------");
+/*            Log.i("LALALALA -- INSIDE","----------------------------");
             Log.i("LALALALA -- INSIDE",items.get(position).getName());
             Log.i("LALALALA -- INSIDE",Boolean.toString(items.get(position).isUsed()));
-            Log.i("LALALALA -- INSIDE","----------------------------");
+            Log.i("LALALALA -- INSIDE","----------------------------");*/
             if(items.get(position).isUsed())
             {
                 selectedList.put(items.get(position).getName(),"");

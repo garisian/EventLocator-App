@@ -112,7 +112,9 @@ public class AddressActivity extends AppCompatActivity implements GoogleMap.OnMa
                     // If location is populated, it will have all the information regarding the lcoation
                     double lat = l.getLatitude();
                     double lng = l.getLongitude();
+/*
                     Toast.makeText(getApplicationContext(), "LAT: "+lat+"\n LNG:" +lng,Toast.LENGTH_LONG).show();
+*/
 
                     // Display the location on googlemaps
                     putMarker(lat,lng,googleMap);

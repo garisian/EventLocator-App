@@ -38,6 +38,9 @@ public class LocationDetailsActivity extends AppCompatActivity implements Google
     // Debugging Purposes
     private String TAG = "LocationDetailsActivity";
 
+    // Builder that contains the map constraints for the xzoom
+    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
     // List containing used markers
     ArrayList<MarkerOptions> listOfMarkers = new ArrayList<MarkerOptions>();
 
@@ -137,16 +140,24 @@ public class LocationDetailsActivity extends AppCompatActivity implements Google
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 */
 
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (MarkerOptions marker : listOfMarkers) {
             builder.include(marker.getPosition());
         }
         LatLngBounds bounds = builder.build();
 
-        // offset from edges of the map in pixels
-        int padding = 100;
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-        googleMap.animateCamera(cu);
+
+        googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                // Move camera.
+                int width = getResources().getDisplayMetrics().widthPixels;
+                int height = getResources().getDisplayMetrics().heightPixels;
+                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(builder.build(),150);
+                gm.animateCamera(cu);
+                // Remove listener to prevent position reset on camera move.
+            }
+        });
+
 
     }
 }
