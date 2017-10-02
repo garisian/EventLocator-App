@@ -27,7 +27,7 @@ An andoid app made for anyone who wants a quick way to find local business.
 
 
 ## Below is a demo of the app in action
-![demo](screenplays/demo.gif)
+![demo](screenplays/sampleDemo.gif)
 
 
 ## Download (VERY SOON)
