@@ -1,4 +1,4 @@
-# Locaté (App)
+# LocatÃ© (App)
 
 
 An andoid app made for anyone who wants a quick way to find local business.
@@ -21,7 +21,7 @@ An andoid app made for anyone who wants a quick way to find local business.
 - Find the best POIs according to the user's past search
 
 ## Benefits
-- This application utilizes adapters to recycle existing views to avoid memory cacheing and increase speed. 
+- This application utilizes adapters to recycle existing views to avoid memory caching and increase speed. 
 
 
 
@@ -32,9 +32,7 @@ An andoid app made for anyone who wants a quick way to find local business.
 
 ## Download (VERY SOON)
 
-The app is currently unavailable for download on the Google Play Store. The app is called "Locaté" and is currently on version 1.2
-
-- From the [Play Store](https://play.google.com/store/)
+The app is currently unavailable for download on the Google Play Store. It will be released within the next few weeks.
 
 
 
